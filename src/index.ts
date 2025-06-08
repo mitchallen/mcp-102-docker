@@ -60,28 +60,43 @@ class WeatherMCPServer {
 
     // Handle tool calls
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      const { name, arguments: args } = request.params;
+      try {
+        const { name, arguments: args } = request.params;
 
-      if (name === 'get_weather') {
-        const { city, units = 'celsius' } = args as {
-          city: string;
-          units?: 'celsius' | 'fahrenheit';
-        };
+        if (name === 'get_weather') {
+          const { city, units = 'celsius' } = args as {
+            city: string;
+            units?: 'celsius' | 'fahrenheit';
+          };
 
-        // Simulate weather data (replace with real API call)
-        const weatherData = this.getWeatherData(city, units);
+          if (!city || typeof city !== 'string') {
+            throw new Error('City parameter is required and must be a string');
+          }
 
+          const weatherData = await this.getWeatherData(city, units);
+
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify(weatherData, null, 2),
+              },
+            ],
+          };
+        }
+
+        throw new Error(`Unknown tool: ${name}`);
+      } catch (error) {
         return {
           content: [
             {
               type: 'text',
-              text: JSON.stringify(weatherData, null, 2),
+              text: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
             },
           ],
+          isError: true,
         };
       }
-
-      throw new Error(`Unknown tool: ${name}`);
     });
 
     // List available resources
@@ -119,7 +134,10 @@ class WeatherMCPServer {
     });
   }
 
-  private getWeatherData(city: string, units: 'celsius' | 'fahrenheit') {
+  private async getWeatherData(city: string, units: 'celsius' | 'fahrenheit') {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     // Simulate weather data - replace with actual API call
     const baseTemp = Math.floor(Math.random() * 30) + 5;
     const temperature = units === 'fahrenheit'
@@ -143,7 +161,11 @@ class WeatherMCPServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
+
+    // Log to stderr so it doesn't interfere with MCP communication
     console.error('Weather MCP server running on stdio');
+    console.error(`Process ID: ${process.pid}`);
+    console.error(`Container: ${process.env.HOSTNAME || 'local'}`);
   }
 }
 
