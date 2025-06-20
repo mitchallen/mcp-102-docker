@@ -167,5 +167,12 @@ scan: ## Scan the Docker image ($(IMAGE_NAME)) for vulnerabilities using Trivy
 	@echo "$(GREEN)Scanning Docker image '$(IMAGE_NAME)' for vulnerabilities with Trivy...$(NC)"
 	@docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image $(IMAGE_NAME)
 
+# Claude Desktop log viewer
+.PHONY: logs-claude
+
+logs-claude: ## Show Claude Desktop logs from the last hour (macOS only)
+	@echo "$(GREEN)Showing Claude Desktop logs from the last hour...$(NC)"
+	log show --predicate 'process == "Claude Desktop"' --last 1h
+
 # Default target when no arguments provided
 .DEFAULT_GOAL := help
