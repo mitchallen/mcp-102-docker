@@ -35,7 +35,7 @@ class WeatherMCPServer {
       return {
         tools: [
           {
-            name: 'get_weather',
+            name: 'get_weather_2',
             description: 'Get current weather for a city',
             inputSchema: {
               type: 'object',
@@ -63,7 +63,7 @@ class WeatherMCPServer {
       try {
         const { name, arguments: args } = request.params;
 
-        if (name === 'get_weather') {
+        if (name === 'get_weather_2') {
           const { city, units = 'celsius' } = args as {
             city: string;
             units?: 'celsius' | 'fahrenheit';

@@ -69,7 +69,17 @@ class DockerMCPTester {
         name: 'get_weather',
         arguments: { city, units: 'celsius' },
       });
-      console.log(`Weather for ${city}:`, JSON.parse(response.content[0].text).condition);
+      if (
+        response &&
+        Array.isArray((response as any).content) &&
+        (response as any).content.length > 0 &&
+        typeof (response as any).content[0].text === 'string'
+      ) {
+        const condition = JSON.parse((response as any).content[0].text).condition;
+        console.log(`Weather for ${city}:`, condition);
+      } else {
+        console.warn(`No valid content for city: ${city}`);
+      }
     }
   }
 

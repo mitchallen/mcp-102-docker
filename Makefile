@@ -3,7 +3,8 @@ NPM := npm
 TSC := npx tsc
 TSX := npx tsx
 NODE := node
-PROJECT_NAME := mcp-101
+PROJECT_NAME := mcp-docker-102
+IMAGE_NAME := mcp-weather-server
 
 # Colors for output
 GREEN := \033[0;32m
@@ -146,5 +147,25 @@ quick: install build ## Quick setup: install and build
 .PHONY: reset
 reset: clean-all install build ## Reset project: clean everything and rebuild
 
+# Docker helpers
+.PHONY: docker-build
+
+docker-build: ## Build the Docker image ($(IMAGE_NAME))
+	@echo "$(GREEN)Building Docker image '$(IMAGE_NAME)'...$(NC)"
+	docker build -t $(IMAGE_NAME) .
+
+.PHONY: docker-remove
+
+docker-remove: ## Remove the Docker image ($(IMAGE_NAME))
+	@echo "$(YELLOW)Removing Docker image '$(IMAGE_NAME)'...$(NC)"
+	docker rmi $(IMAGE_NAME) || true
+
+# Docker security scan
+.PHONY: scan
+
+scan: ## Scan the Docker image ($(IMAGE_NAME)) for vulnerabilities using Trivy
+	@echo "$(GREEN)Scanning Docker image '$(IMAGE_NAME)' for vulnerabilities with Trivy...$(NC)"
+	@docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image $(IMAGE_NAME)
+
 # Default target when no arguments provided
-.DEFAULT_GOAL := help 
+.DEFAULT_GOAL := help
