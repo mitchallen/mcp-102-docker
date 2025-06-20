@@ -24,7 +24,7 @@ This project implements a weather server using the Model Context Protocol (MCP) 
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd mcp-101
+cd mcp-102-docker
 
 # Install dependencies
 npm install
@@ -96,17 +96,21 @@ Run `make help` to see all available commands:
 ## 🏗️ Project Structure
 
 ```
-mcp-101/
+mcp-102-docker/
 ├── src/
+│   ├── docker-test.ts     # Docker integration/test script
 │   ├── index.ts          # Main server entry point
 │   └── test.ts           # Test suite
 ├── dist/                 # Compiled JavaScript output
 ├── node_modules/         # Dependencies
 ├── package.json          # Project configuration
+├── package-lock.json     # NPM lockfile
 ├── tsconfig.json         # TypeScript configuration
-├── Makefile             # Build and development commands
-├── .gitignore           # Git ignore rules
-└── README.md            # Project documentation
+├── Makefile              # Build and development commands
+├── Dockerfile            # Docker build instructions
+├── .dockerignore         # Docker ignore rules
+├── .gitignore            # Git ignore rules
+└── README.md             # Project documentation
 ```
 
 ## 🔧 Configuration
@@ -164,7 +168,7 @@ claude_desktop_config.json
      "mcpServers": {
        "weather-server": {
          "command": "node",
-         "args": ["/absolute/path/to/your/mcp-101/dist/index.js"],
+         "args": ["/absolute/path/to/your/mcp-102-docker/dist/index.js"],
          "env": {
            "NODE_ENV": "production"
          }
@@ -173,11 +177,11 @@ claude_desktop_config.json
    }
    ```
 
-   **Important**: Replace `/absolute/path/to/your/mcp-101/` with your actual project path:
+   **Important**: Replace `/absolute/path/to/your/mcp-102-docker/` with your actual project path:
    ```bash
    # Get your current path
    pwd
-   # Example result: /Users/username/projects/mcp/mcp-101
+   # Example result: /Users/username/projects/mcp/mcp-102-docker
    ```
 
 5. **Alternative: Using npm global install**:
@@ -223,7 +227,7 @@ claude_desktop_config.json
    node dist/index.js
    
    # Verify the path in config is correct
-   ls -la /absolute/path/to/your/mcp-101/dist/index.js
+   ls -la /absolute/path/to/your/mcp-102-docker/dist/index.js
    ```
 
 2. **Permission issues**:
@@ -246,7 +250,7 @@ For debugging, you can add logging to your config:
   "mcpServers": {
     "weather-server": {
       "command": "node",
-      "args": ["/absolute/path/to/your/mcp-101/dist/index.js"],
+      "args": ["/absolute/path/to/your/mcp-102-docker/dist/index.js"],
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "mcp:*"
@@ -311,6 +315,41 @@ echo "Then restart Claude Desktop to test!"
 # Make it executable and run
 chmod +x setup-claude.sh
 ./setup-claude.sh
+```
+
+## 🐳 Docker
+
+### Prerequisites
+- **Docker** installed
+- **Trivy** (used automatically via Docker in Makefile for scanning)
+
+### Build the Docker image
+```bash
+make docker-build
+```
+
+### Remove the Docker image
+```bash
+make docker-remove
+```
+
+### Scan the Docker image for vulnerabilities
+```bash
+make scan
+```
+
+## 🧪 Docker Integration Test
+
+The file `src/docker-test.ts` is a script for testing the MCP server in a Dockerized environment. To run it:
+
+```bash
+npx tsx src/docker-test.ts
+```
+
+Or, if you want to run the compiled version:
+
+```bash
+node dist/docker-test.js
 ```
 
 ## 🛠️ Development Workflow
@@ -419,4 +458,4 @@ For issues and questions:
 
 ---
 
-Built with ❤️ using TypeScript and the Model Context Protocol 
+Built with ❤️ using TypeScript and the Model Context Protocol
