@@ -183,7 +183,7 @@ You can configure Claude Desktop to use the Dockerized MCP Weather Server as a c
    - Go to **Claude > Settings > Developer > Edit Config**
 
 3. **Edit your Claude Desktop config file** (e.g., `claude_desktop_config.json`) and add or update the `mcpServers` section:
-   ```json
+```json
    {
     "mcpServers": {
       "docker-server": {
@@ -201,8 +201,7 @@ You can configure Claude Desktop to use the Dockerized MCP Weather Server as a c
       }
     }
   }
-
-   ```
+```
 
 4. **Save the config and restart Claude Desktop** to apply the changes.
 
