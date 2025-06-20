@@ -165,15 +165,18 @@ claude_desktop_config.json
 4. **Add your MCP server configuration**:
    ```json
    {
-     "mcpServers": {
-       "weather-server": {
-         "command": "node",
-         "args": ["/absolute/path/to/your/mcp-102-docker/dist/index.js"],
-         "env": {
-           "NODE_ENV": "production"
-         }
-       }
-     }
+    "mcpServers": {
+      "docker-server": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "--name", "mcp-weather-server",
+          "mcp-weather-server:latest"
+        ]
+      }
+    }
    }
    ```
 
@@ -182,21 +185,6 @@ claude_desktop_config.json
    # Get your current path
    pwd
    # Example result: /Users/username/projects/mcp/mcp-102-docker
-   ```
-
-5. **Alternative: Using npm global install**:
-   ```bash
-   # Install globally (after building)
-   npm install -g .
-   
-   # Then use in config:
-   {
-     "mcpServers": {
-       "weather-server": {
-         "command": "weather-server"
-       }
-     }
-   }
    ```
 
 ### Testing Steps
@@ -247,17 +235,20 @@ claude_desktop_config.json
 For debugging, you can add logging to your config:
 ```json
 {
-  "mcpServers": {
-    "weather-server": {
-      "command": "node",
-      "args": ["/absolute/path/to/your/mcp-102-docker/dist/index.js"],
-      "env": {
-        "NODE_ENV": "development",
-        "DEBUG": "mcp:*"
+    "mcpServers": {
+      "docker-server": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "--name", "mcp-weather-server",
+          "mcp-weather-server:latest"
+        ]
       }
     }
-  }
 }
+
 ```
 
 #### Viewing Logs
