@@ -70,14 +70,6 @@ mcp-102-docker/
 └── README.md              # Project documentation
 ```
 
-## 🛠️ Development Workflow
-
-1. **Make Changes**: Edit files in `src/`
-2. **Test Changes**: `make test`
-3. **Type Check**: `make typecheck`
-4. **Build**: `make build`
-5. **Verify**: `make verify` (runs full pipeline)
-
 ## 📚 Model Context Protocol (MCP)
 
 This server implements the Model Context Protocol, which provides:
