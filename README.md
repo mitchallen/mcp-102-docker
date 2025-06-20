@@ -13,9 +13,8 @@ This project implements a weather server using the Model Context Protocol (MCP) 
 
 ## 📋 Prerequisites
 
-- **Node.js** (v18 or higher)
-- **npm** (v8 or higher)
-- **TypeScript** knowledge for development
+- **Docker** (for running the server and integration tests)
+- **Trivy** (used automatically via Docker in Makefile for scanning)
 
 ## 🚀 Quick Start
 
@@ -25,73 +24,38 @@ This project implements a weather server using the Model Context Protocol (MCP) 
 # Clone the repository
 git clone <your-repo-url>
 cd mcp-102-docker
-
-# Install dependencies
-npm install
-# or using Makefile
-make install
 ```
 
-### Development
+### Docker Usage
+
+#### Build the Docker image
+```bash
+make docker-build
+```
+
+#### Remove the Docker image
+```bash
+make docker-remove
+```
+
+#### Scan the Docker image for vulnerabilities
+```bash
+make scan
+```
+
+## 🧪 Docker Integration Test
+
+The file `src/docker-test.ts` is a script for testing the MCP server in a Dockerized environment. To run it:
 
 ```bash
-# Start development server with hot reload
-npm run dev
-# or
-make dev
-
-# Run in watch mode
-npm run watch
-# or
-make watch
+npx tsx src/docker-test.ts
 ```
 
-### Production
+Or, if you want to run the compiled version:
 
 ```bash
-# Build the project
-npm run build
-# or
-make build
-
-# Start the server
-npm start
-# or
-make start
-
-# Build and start in one command
-make start-prod
+node dist/docker-test.js
 ```
-
-## 📦 Available Scripts
-
-### NPM Scripts
-- `npm run build` - Compile TypeScript to JavaScript
-- `npm run dev` - Run development server with tsx
-- `npm start` - Start the compiled application
-- `npm run watch` - Run with file watching for auto-restart
-- `npm test` - Run the test suite
-
-### Makefile Commands
-Run `make help` to see all available commands:
-
-#### Development
-- `make dev` - Start development server with hot reload
-- `make watch` - Run in watch mode
-- `make build` - Build the project
-- `make test` - Run tests
-- `make typecheck` - Run TypeScript type checking
-
-#### Maintenance
-- `make clean` - Clean build artifacts
-- `make clean-deps` - Clean node_modules
-- `make reset` - Full reset (clean + reinstall + rebuild)
-- `make verify` - Full verification pipeline
-
-#### Utilities
-- `make outdated` - Check for outdated packages
-- `make update` - Update dependencies
-- `make package` - Create distributable package
 
 ## 🏗️ Project Structure
 
@@ -113,244 +77,13 @@ mcp-102-docker/
 └── README.md             # Project documentation
 ```
 
-## 🔧 Configuration
-
-### TypeScript Configuration
-The project uses TypeScript with ES modules. Configuration is in `tsconfig.json`.
-
-### Package Configuration
-- **Type**: ES Module (`"type": "module"`)
-- **Main Entry**: `dist/index.js`
-- **Binary**: `weather-server` command available after global install
-
-## 🧪 Testing
-
-```bash
-# Run tests
-npm test
-# or
-make test
-
-# Run tests in watch mode
-make test-watch
-```
-
-## 🖥️ Testing with Claude Desktop (Mac)
-
-### Prerequisites
-1. **Claude Desktop** installed on your Mac
-2. **Built MCP server**: Run `make build` to compile your server
-
-### Configuration Steps
-
-1. **Build your server**:
-   ```bash
-   make build
-   ```
-
-2. **Locate Claude Desktop config**:
-
-On a Mac, 
-
-   * Claude > Settings > Developer > Edit Config
-
-3. **Create or edit the config file**:
-
-In the Finder file window, right click to edit this file in your preferred editor:
-
-```sh
-claude_desktop_config.json
-```
-
-4. **Add your MCP server configuration**:
-   ```json
-   {
-    "mcpServers": {
-      "docker-server": {
-        "command": "docker",
-        "args": [
-          "run",
-          "-i",
-          "--rm",
-          "--name", "mcp-weather-server",
-          "mcp-weather-server:latest"
-        ]
-      }
-    }
-   }
-   ```
-
-   **Important**: Replace `/absolute/path/to/your/mcp-102-docker/` with your actual project path:
-   ```bash
-   # Get your current path
-   pwd
-   # Example result: /Users/username/projects/mcp/mcp-102-docker
-   ```
-
-### Testing Steps
-
-1. **Restart Claude Desktop** completely:
-   ```bash
-   # Quit Claude Desktop completely
-   # Then relaunch from Applications
-   ```
-
-2. **Verify server connection**:
-   - Open Claude Desktop
-   - Look for MCP server indicators in the interface
-   - Check for any error messages
-
-3. **Test weather functionality**:
-   - Ask Claude about weather in various locations
-   - Try different weather-related queries
-   - Verify the responses come from your MCP server
-
-### Troubleshooting Claude Desktop Integration
-
-#### Common Issues
-
-1. **Server not connecting**:
-   ```bash
-   # Check if your server runs standalone
-   node dist/index.js
-   
-   # Verify the path in config is correct
-   ls -la /absolute/path/to/your/mcp-102-docker/dist/index.js
-   ```
-
-2. **Permission issues**:
-   ```bash
-   # Make sure the file is executable
-   chmod +x dist/index.js
-   ```
-
-3. **Configuration file issues**:
-   ```bash
-   # Validate JSON syntax
-   cat ~/Library/Application\ Support/Claude/claude_desktop_config.json | python3 -m json.tool
-   ```
-
-#### Debug Configuration
-
-For debugging, you can add logging to your config:
-```json
-{
-    "mcpServers": {
-      "docker-server": {
-        "command": "docker",
-        "args": [
-          "run",
-          "-i",
-          "--rm",
-          "--name", "mcp-weather-server",
-          "mcp-weather-server:latest"
-        ]
-      }
-    }
-}
-
-```
-
-#### Viewing Logs
-
-1. **Claude Desktop logs**:
-   ```bash
-   # Check Console app for Claude Desktop logs
-   # Or check system logs:
-   log show --predicate 'process == "Claude Desktop"' --last 1h
-   ```
-
-2. **Your server logs**:
-   - Add console.log statements to your `src/index.ts`
-   - Rebuild with `make build`
-   - Restart Claude Desktop
-
-### Development Workflow with Claude Desktop
-
-1. **Make changes** to your server code
-2. **Rebuild**: `make build`
-3. **Restart Claude Desktop** to reload the server
-4. **Test** the changes in Claude Desktop
-5. **Repeat** as needed
-
-### Quick Setup Script
-
-Create a setup script for easier testing:
-
-```bash
-# create setup-claude.sh
-#!/bin/bash
-echo "Building MCP server..."
-make build
-
-echo "Current project path:"
-pwd
-
-echo ""
-echo "Add this to your Claude Desktop config:"
-echo "~/Library/Application Support/Claude/claude_desktop_config.json"
-echo ""
-echo "{"
-echo "  \"mcpServers\": {"
-echo "    \"weather-server\": {"
-echo "      \"command\": \"node\","
-echo "      \"args\": [\"$(pwd)/dist/index.js\"]"
-echo "    }"
-echo "  }"
-echo "}"
-echo ""
-echo "Then restart Claude Desktop to test!"
-```
-
-```bash
-# Make it executable and run
-chmod +x setup-claude.sh
-./setup-claude.sh
-```
-
-## 🐳 Docker
-
-### Prerequisites
-- **Docker** installed
-- **Trivy** (used automatically via Docker in Makefile for scanning)
-
-### Build the Docker image
-```bash
-make docker-build
-```
-
-### Remove the Docker image
-```bash
-make docker-remove
-```
-
-### Scan the Docker image for vulnerabilities
-```bash
-make scan
-```
-
-## 🧪 Docker Integration Test
-
-The file `src/docker-test.ts` is a script for testing the MCP server in a Dockerized environment. To run it:
-
-```bash
-npx tsx src/docker-test.ts
-```
-
-Or, if you want to run the compiled version:
-
-```bash
-node dist/docker-test.js
-```
-
 ## 🛠️ Development Workflow
 
-1. **Start Development**: `make dev`
-2. **Make Changes**: Edit files in `src/`
-3. **Test Changes**: `make test`
-4. **Type Check**: `make typecheck`
-5. **Build**: `make build`
-6. **Verify**: `make verify` (runs full pipeline)
+1. **Make Changes**: Edit files in `src/`
+2. **Test Changes**: `make test`
+3. **Type Check**: `make typecheck`
+4. **Build**: `make build`
+5. **Verify**: `make verify` (runs full pipeline)
 
 ## 📚 Model Context Protocol (MCP)
 
@@ -418,6 +151,9 @@ make git-clean
 
 # Check for outdated dependencies
 make outdated
+
+# View Claude Desktop logs (macOS only)
+make logs-claude
 ```
 
 ## 🤝 Contributing
