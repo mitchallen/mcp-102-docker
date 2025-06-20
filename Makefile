@@ -167,6 +167,20 @@ scan: ## Scan the Docker image ($(IMAGE_NAME)) for vulnerabilities using Trivy
 	@echo "$(GREEN)Scanning Docker image '$(IMAGE_NAME)' for vulnerabilities with Trivy...$(NC)"
 	@docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image $(IMAGE_NAME)
 
+# Docker integration test
+.PHONY: docker-test
+
+docker-test: ## Run the Docker integration test (checks Docker and image first)
+	@if ! docker info >/dev/null 2>&1; then \
+		echo "$(RED)Docker is not running. Please start Docker and try again.$(NC)"; \
+		exit 1; \
+	fi
+	@if ! docker image inspect mcp-weather-server >/dev/null 2>&1; then \
+		echo "$(YELLOW)Docker image 'mcp-weather-server' not found. Building it now...$(NC)"; \
+		$(MAKE) docker-build; \
+	fi
+	npx tsx src/docker-test.ts
+
 # Claude Desktop log viewer
 .PHONY: logs-claude
 

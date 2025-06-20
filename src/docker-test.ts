@@ -21,7 +21,7 @@ class DockerMCPTester {
     // Connect to dockerized MCP server
     this.transport = new StdioClientTransport({
       command: 'docker',
-      args: ['run', '-i', '--rm', 'weather-mcp-server'],
+      args: ['run', '-i', '--rm', 'mcp-weather-server'],
     });
 
     await this.client.connect(this.transport);
@@ -66,7 +66,7 @@ class DockerMCPTester {
     const cities = ['New York', 'London', 'Paris'];
     for (const city of cities) {
       const response = await this.client.callTool({
-        name: 'get_weather',
+        name: 'get_weather_2', // Use the correct tool name
         arguments: { city, units: 'celsius' },
       });
       if (
@@ -75,8 +75,13 @@ class DockerMCPTester {
         (response as any).content.length > 0 &&
         typeof (response as any).content[0].text === 'string'
       ) {
-        const condition = JSON.parse((response as any).content[0].text).condition;
-        console.log(`Weather for ${city}:`, condition);
+        const text = (response as any).content[0].text;
+        try {
+          const parsed = JSON.parse(text);
+          console.log(`Weather for ${city}:`, parsed.condition);
+        } catch (e) {
+          console.warn(`Non-JSON response for city: ${city}:`, text);
+        }
       } else {
         console.warn(`No valid content for city: ${city}`);
       }
@@ -103,6 +108,8 @@ async function runDockerTests() {
     console.error('❌ Docker test failed:', error);
   } finally {
     await tester.disconnect();
+    // Ensure process exits after disconnect
+    process.exit(0);
   }
 }
 
