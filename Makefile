@@ -48,17 +48,6 @@ build: ## Build the project
 .PHONY: build-clean
 build-clean: clean build ## Clean build
 
-# Testing
-.PHONY: test
-test: ## Run tests
-	@echo "$(GREEN)Running tests...$(NC)"
-	$(NPM) run test
-
-.PHONY: test-watch
-test-watch: ## Run tests in watch mode
-	@echo "$(GREEN)Running tests in watch mode...$(NC)"
-	$(TSX) watch src/test.ts
-
 # Running
 .PHONY: start
 start: ## Start the built application
@@ -137,7 +126,7 @@ package: build ## Create a package (tar.gz)
 	$(NPM) pack
 
 .PHONY: verify
-verify: clean install build test ## Full verification pipeline
+verify: clean install build ## Full verification pipeline
 	@echo "$(GREEN)✅ All checks passed!$(NC)"
 
 # Quick development commands

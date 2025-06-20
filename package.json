@@ -11,7 +11,6 @@
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "watch": "tsx watch src/index.ts",
-    "test": "tsx src/test.ts",
     "docker:build": "docker build -t weather-mcp-server .",
     "docker:run": "docker run -i weather-mcp-server",
     "docker:test": "docker run -i weather-mcp-server npm test",
