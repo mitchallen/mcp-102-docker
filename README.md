@@ -183,6 +183,55 @@ For issues and questions:
 2. Create a new issue with detailed information
 3. Include steps to reproduce any bugs
 
+## 🖥️ Using with Claude Desktop (Mac)
+
+You can configure Claude Desktop to use the Dockerized MCP Weather Server as a custom MCP server.
+
+### Steps
+
+1. **Build the Docker image** (if you haven't already):
+   ```bash
+   make docker-build
+   ```
+
+2. **Open Claude Desktop Settings:**
+   - Go to **Claude > Settings > Developer > Edit Config**
+
+3. **Edit your Claude Desktop config file** (e.g., `claude_desktop_config.json`) and add or update the `mcpServers` section:
+   ```json
+   {
+    "mcpServers": {
+      "docker-server": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "--name", "mcp-weather-server",
+          "mcp-weather-server:latest"
+        ],
+        "env": {
+          "DEBUG": "mcp:*"
+        }
+      }
+    }
+  }
+
+   ```
+
+4. **Save the config and restart Claude Desktop** to apply the changes.
+
+5. Click on the **Search and Tools** button under the prompt
+
+6. Under **docker-server** (the name in your config above) enable **get_weather_2**
+   * If you had another weather tool enable (like from my previous example), disable it
+
+5. **Test**: Ask Claude about the weather in various locations to verify the MCP server is being used.
+
+**Note:**
+- The Docker image must be built and available locally as `mcp-weather-server:latest`.
+- The above config will run the server in a disposable container each time Claude Desktop starts it.
+
 ---
 
-Built with ❤️ using TypeScript and the Model Context Protocol
+Built using TypeScript, Docker and the Model Context Protocol
