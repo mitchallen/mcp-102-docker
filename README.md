@@ -51,30 +51,23 @@ The file `src/docker-test.ts` is a script for testing the MCP server in a Docker
 npx tsx src/docker-test.ts
 ```
 
-Or, if you want to run the compiled version:
-
-```bash
-node dist/docker-test.js
-```
-
 ## 🏗️ Project Structure
 
 ```
 mcp-102-docker/
 ├── src/
 │   ├── docker-test.ts     # Docker integration/test script
-│   ├── index.ts          # Main server entry point
-│   └── test.ts           # Test suite
-├── dist/                 # Compiled JavaScript output
-├── node_modules/         # Dependencies
-├── package.json          # Project configuration
-├── package-lock.json     # NPM lockfile
-├── tsconfig.json         # TypeScript configuration
-├── Makefile              # Build and development commands
-├── Dockerfile            # Docker build instructions
-├── .dockerignore         # Docker ignore rules
-├── .gitignore            # Git ignore rules
-└── README.md             # Project documentation
+│   ├── index.ts           # Main server entry point
+├── dist/                  # Compiled JavaScript output
+├── node_modules/          # Dependencies
+├── package.json           # Project configuration
+├── package-lock.json      # NPM lockfile
+├── tsconfig.json          # TypeScript configuration
+├── Makefile               # Build and development commands
+├── Dockerfile             # Docker build instructions
+├── .dockerignore          # Docker ignore rules
+├── .gitignore             # Git ignore rules
+└── README.md              # Project documentation
 ```
 
 ## 🛠️ Development Workflow
