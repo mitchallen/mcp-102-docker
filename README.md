@@ -213,7 +213,6 @@ This project is licensed under the ISC License.
 ## 🔗 Links
 
 - [Model Context Protocol](https://github.com/modelcontextprotocol)
-- [MCP SDK Documentation](https://github.com/modelcontextprotocol/sdk)
 - [TypeScript Documentation](https://www.typescriptlang.org/)
 
 ## 📧 Support
